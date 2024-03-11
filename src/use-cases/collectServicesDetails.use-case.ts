@@ -29,18 +29,20 @@ export default class CollectServicesDetails
 
     for (let i = 0; i < labels.length; i++) {
       const label = labels[i];
-      const resPod = this.execute(`kubectl get pod -o json -l app=${label}`);
+      const resPod = this.execute(
+        `microk8s kubectl get pod -o json -l app=${label}`
+      );
       const podReq: KubernetesRequest<Pod> = JSON.parse(resPod);
       const pod: Pod = podReq.items[0];
 
       const resDeploy = this.execute(
-        `kubectl get deploy -o json -l app=${label}`
+        `microk8s kubectl get deploy -o json -l app=${label}`
       );
       const deployReq: KubernetesRequest<Deploy> = JSON.parse(resDeploy);
       const deploy: Deploy = deployReq.items[0];
 
       const resService = this.execute(
-        `kubectl get svc -o json -l app=${label}`
+        `microk8s kubectl get svc -o json -l app=${label}`
       );
       const serviceReq: KubernetesRequest<Service> = JSON.parse(resService);
       const service: Service = serviceReq.items[0];

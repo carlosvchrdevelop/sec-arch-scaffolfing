@@ -1,6 +1,7 @@
 <script>
   import Spinner from "../../../components/Spinner.svelte";
   import Alert from "../../../components/Alert.svelte";
+  import { kubernetesEndpoint } from "../../../config/endpoints";
   const urlParams = new URLSearchParams(window.location.search);
   let editMode = false;
   let id = undefined;
@@ -23,7 +24,7 @@
   let sending = false;
 
   if (id !== undefined) {
-    fetch(`http://localhost:3000/kubernetes/${id}`)
+    fetch(`${kubernetesEndpoint}/${id}`)
       .then((res) => res.json())
       .then((data) => {
         const resource = data.data;
@@ -55,7 +56,7 @@
   const update = () => {
     try {
       sending = true;
-      fetch(`http://localhost:3000/kubernetes/${id}`, {
+      fetch(`${kubernetesEndpoint}/${id}`, {
         method: "PUT",
         body: prepareBody(),
         headers: {
@@ -81,7 +82,7 @@
   const create = () => {
     sending = true;
 
-    fetch(`http://localhost:3000/kubernetes`, {
+    fetch(kubernetesEndpoint, {
       method: "POST",
       body: prepareBody(),
       headers: {

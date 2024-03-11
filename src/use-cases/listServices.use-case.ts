@@ -16,7 +16,7 @@ export default class ListServices implements ListServicesUseCase {
   exec(): string[] {
     try {
       const result = this.execute(
-        "kubectl get deployments --selector=app -o jsonpath='{.items[*].metadata.labels.app}'"
+        "microk8s kubectl get deployments --selector=app -o jsonpath='{.items[*].metadata.labels.app}'"
       );
       if (result) {
         let labels = result.trim().replace(/["'`]+/g, "");

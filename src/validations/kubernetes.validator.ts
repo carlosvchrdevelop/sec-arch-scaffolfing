@@ -9,8 +9,6 @@ export const validatorGet = (req: Request) => {
     .parse(req.params);
 };
 
-export const validatorGetAll = (req: Request) => {};
-
 export const validatorStore = (req: Request) => {
   return z
     .object({

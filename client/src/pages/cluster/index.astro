@@ -1,7 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
+import ClusterMain from "./components/clusterMain.svelte";
 ---
 
-<Layout title="Cluster" breadcrumb='/cluster' isIndex>
-    
+<Layout title="Cluster" breadcrumb="/cluster" isIndex>
+  <ClusterMain client:only />
 </Layout>

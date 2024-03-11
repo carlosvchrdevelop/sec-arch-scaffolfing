@@ -12,7 +12,6 @@ import {
 import { Request, Response, NextFunction } from "express";
 import {
   validatorGet,
-  validatorGetAll,
   validatorUpdate,
   validatorDestroy,
   validatorStore,
@@ -34,7 +33,6 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getAll = (req: Request, res: Response, next: NextFunction) => {
-  const validated = validatorGetAll(req);
   const cmd = new CMD().exec;
   const labels = new ListServices({ execute: cmd }).exec();
   const resources = new CollectServicesDetails({ execute: cmd }).exec(labels);

@@ -61,7 +61,7 @@ export default class DeployService implements DeployServiceUseCase {
     const filename = `${options.name}.yaml`;
     this.fileHandler.writeFile(options.outputFolder, filename, filledTemplate);
     this.execute(
-      `kubectl apply -f ${this.fileHandler.getPath(
+      `microk8s kubectl apply -f ${this.fileHandler.getPath(
         options.outputFolder,
         filename
       )}`

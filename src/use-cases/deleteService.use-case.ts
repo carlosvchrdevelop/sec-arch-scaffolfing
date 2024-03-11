@@ -15,7 +15,7 @@ export default class DeleteService implements DeleteServiceUseCase {
 
   exec(id: string): void {
     try {
-      const result = this.execute(`kubectl delete all -l app=${id}`);
+      const result = this.execute(`microk8s kubectl delete all -l app=${id}`);
     } catch (error) {
       throw new Error(JSON.stringify((error as Error).message));
     }
