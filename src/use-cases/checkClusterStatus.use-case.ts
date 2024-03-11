@@ -17,12 +17,10 @@ export default class CheckClusterStatus implements CheckClusterStatusUseCase {
 
   exec() {
     try {
-      const res = this.execute(
-        "microk8s status --wait-ready"
-      ).toLocaleLowerCase();
+      const res = this.execute("microk8s status").toLocaleLowerCase();
 
-      if (res.includes("microK8s is not running")) return "Stopped";
-      if (res.includes("microK8s is running")) return "Started";
+      if (res.includes("microk8s is not running")) return "Stopped";
+      if (res.includes("microk8s is running")) return "Started";
 
       return "Error";
     } catch (error) {

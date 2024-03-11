@@ -20,3 +20,18 @@ npm start
 cd client
 npm start
 ```
+
+## Troubleshooting
+
+Si se inicia con un clúster de `Microk8s` con `multipass` en Windows es posible que se vinculen incorrectamente el clúster con la máquina virtual. En este caso debemos consultar la IP asignada al clúster, la IP asignada a la máquina virtual y, si son distintas, reconfigurarlo.
+
+```bash
+# Consultamos la IP del clúster
+microk8s kubectl config view --raw
+
+# Consultamos la IP de la máquina virtual
+multipass info --all
+
+# Reconfiguramos la IP
+microk8s kubectl config set-cluster microk8s-cluster --server="https://[IP]:16443".
+```

@@ -2,6 +2,7 @@
   import Spinner from "../../../components/Spinner.svelte";
   import Alert from "../../../components/Alert.svelte";
   import { kubernetesEndpoint } from "../../../config/endpoints";
+  import Loading from "../../../components/Loading.svelte";
   const urlParams = new URLSearchParams(window.location.search);
   let editMode = false;
   let id = undefined;
@@ -23,21 +24,23 @@
   let errors = "";
   let sending = false;
 
-  if (id !== undefined) {
-    fetch(`${kubernetesEndpoint}/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const resource = data.data;
-        name = resource.name;
-        image = resource.image;
-        internalPort = resource.internalport;
-        externalPort = resource.externalport;
-        replicas = resource.replicas;
-        serviceType = resource.serviceType;
-        maxCpu = resource.maxcpu;
-        maxMemory = resource.maxmemory;
-      });
-  }
+  const getData = async () => {
+    const res = await fetch(`${kubernetesEndpoint}/${id}`);
+    return await res.json();
+  };
+
+  const populate = (resource) => {
+    name = resource.name;
+    image = resource.image;
+    internalPort = resource.internalport;
+    externalPort = resource.externalport;
+    replicas = resource.replicas;
+    serviceType = resource.serviceType;
+    maxCpu = resource.maxcpu;
+    maxMemory = resource.maxmemory;
+  };
+
+  let data = editMode ? getData() : null;
 
   const prepareBody = () => {
     return JSON.stringify({
@@ -113,6 +116,11 @@
   <Alert msg={errors} kind="error" close={closeAlert} />
 {/if}
 
+{#await data}
+  <Loading msg="Receiving data" />
+{:then data}
+  {populate(data)}
+{/await}
 <form
   action="/services/create"
   method="GET"

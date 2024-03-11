@@ -1,5 +1,6 @@
 <script>
-  import Spinner from "../../../components/Spinner.svelte";
+  import Loading from "../../../components/Loading.svelte";
+  import { kubernetesEndpoint } from "../../../config/endpoints";
   import DeleteIcon from "../../../icons/DeleteIcon.svelte";
   import EditIcon from "../../../icons/EditIcon.svelte";
   import StartIcon from "../../../icons/StartIcon.svelte";
@@ -22,7 +23,7 @@
 
   const deleteResource = async (id) => {
     try {
-      await fetch(`http://localhost:3000/kubernetes/${id}`, {
+      await fetch(`${kubernetesEndpoint}/${id}`, {
         method: "DELETE",
       });
     } catch (err) {
@@ -45,12 +46,7 @@
 
 {errors}
 {#await resources}
-  <div
-    class="text-lg text-gray-500 w-full gap-2 py-20 flex items-center justify-center"
-  >
-    Loading
-    <Spinner />
-  </div>
+  <Loading msg="Receiving data" />
 {:then resources}
   {#if resources.length <= 0}
     <p class="text-lg text-gray-500 text-center py-20">
@@ -107,12 +103,13 @@
                     <StartIcon />
                   </button>
                 {/if}
-                <button
+                <a
+                  href="/services/edit?name={resource.name}"
                   title="edit"
                   class="w-5 cursor-pointer fill-blue-700 hover:fill-blue-900"
                 >
                   <EditIcon />
-                </button>
+                </a>
                 <button
                   type="button"
                   on:click={() => deleteResource(resource.name)}

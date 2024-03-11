@@ -1,4 +1,4 @@
 import express from "express";
-import { check } from "../controllers/cluster.controller";
+import { check, getAll } from "../controllers/cluster.controller";
 
-export default express.Router().get("/status", check);
+export default express.Router().get("/status", check).get("/nodes", getAll);

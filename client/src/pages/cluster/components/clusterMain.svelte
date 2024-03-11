@@ -1,25 +1,22 @@
 <script>
   import ClusterData from "./clusterData.svelte";
-  import ClusterNew from "./clusterNew.svelte";
+  import Loading from "../../../components/Loading.svelte";
   import { clusterEndpoint } from "../../../config/endpoints";
-  import Spinner from "../../../components/Spinner.svelte";
 
   const getStatus = async () => {
     const res = await fetch(`${clusterEndpoint}/status`);
     if (res.ok) {
       const data = await res.json();
-      return data?.data?.clusterStatus ?? "errorcito";
+      return data?.data?.clusterStatus ?? "Error";
     }
-    return "errorcitoooooo";
+    return "Error";
   };
 
   let status = getStatus();
 </script>
 
 {#await status}
-  <h1 class="flex gap-2 w-full justify-center items-center p-8">
-    Awaiting for data <Spinner />
-  </h1>
+  <Loading msg="Connecting to cluster controller" />
 {:then clusterStatus}
   {#if clusterStatus === "Started"}
     <ClusterData />
