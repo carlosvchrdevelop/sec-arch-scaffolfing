@@ -1,0 +1,25 @@
+---
+import { getLinks } from '../scripts/breadcrumb';
+import HomeIcon from '../icons/HomeIcon.svelte';
+
+interface Props {
+    breadcrumb: string,
+    isIndex: boolean,
+}
+
+const {breadcrumb, isIndex} : Props = Astro.props;
+const breadcrumbLinks = getLinks(breadcrumb);
+
+const breadcrumbBtnStyle = `text-blue-700 hover:underline`;
+const toolBtnStyles = 'px-4 py-1 rounded bg-blue-700 hover:bg-blue-900 text-white text-center';
+const toolBtnTextStyles = 'px-4 py-1 text-blue-700 hover:text-blue-900 text-center';
+---
+<main class="flex justify-between items-center py-2 w-full h-12 fill-blue-700">
+    <ul class="flex gap-1 items-center">
+        <a href="/" class="w-4 cursor-pointer fill-blue-700 hover:fill-blue-900"><HomeIcon /></a>
+        { breadcrumbLinks.map(link => <li class='text-blue-700'>&gt; <a href={link.url} class={breadcrumbBtnStyle}>{link.title}</a></li>)}
+    </ul>
+    <ul class="flex gap-2">
+        {isIndex && <a href=`${breadcrumb}/create` class={toolBtnStyles}>Create</a>}
+    </ul>
+</main>

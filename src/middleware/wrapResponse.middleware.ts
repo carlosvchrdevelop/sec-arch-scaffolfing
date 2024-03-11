@@ -1,17 +1,12 @@
-import { Context, Next } from "koa";
+import { Request, Response } from "express";
 
-export default async function (ctx: Context, next: Next) {
-  try {
-    await next();
-    ctx.res.statusCode === 200
-      ? (ctx.body = { status: "ok", code: ctx.res.statusCode, data: ctx.body })
-      : (ctx.body = { status: "error", code: ctx.res.statusCode, data: {} });
-  } catch (error) {
-    console.log(error);
-    ctx.body = {
-      status: "error",
-      code: ctx.res.statusCode,
-      data: JSON.parse((error as Error).message),
-    };
-  }
-}
+export default (req: Request, res: Response) => {
+  if (req.headers["errors"]) res.status(400);
+
+  return res.json({
+    status: res.statusCode === 200 ? "ok" : "error",
+    code: res.statusCode,
+    data: req.body || [],
+    error: req.headers["errors"],
+  });
+};

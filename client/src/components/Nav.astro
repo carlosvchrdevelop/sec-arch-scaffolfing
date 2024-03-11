@@ -1,0 +1,32 @@
+---
+import { styles } from '../data/styles';
+import { links } from '../data/navlinks';
+
+interface Props {
+    breadcrumb: string;
+}
+
+const { breadcrumb } = Astro.props;
+
+const navContainer = `flex w-screen justify-center items-center px-10 py-8 border-b`;
+const linkStyles = `${styles.navLinkColor} hover:${styles.navLinkColorHover} ${styles.navLinkFontSize}`;
+const navStyles = `flex w-full justify-between ${styles.pageMaxWidth}`;
+const ulStyles = `flex gap-4`;
+const currentTabStyle = `${styles.navLinkUnderline} border-b pb-1`;
+const h1Styles = `text-xl`;
+---
+<div class=`${navContainer}`>
+    <nav class={navStyles}>
+        <ul class={ulStyles}>
+            { links.map( link => { 
+                const isCurrentTab = (breadcrumb.startsWith(link.url) && link.url !== '/') || (breadcrumb === '' && link.url === '/');
+                return (
+                    <li>
+                        <a class=`${linkStyles} ${isCurrentTab ? currentTabStyle : ''}` href={link.url}>{link.title}</a>
+                    </li>)
+                })
+            }    
+        </ul>
+        <h1 class={h1Styles}>SecArch</h1>
+    </nav>
+</div>

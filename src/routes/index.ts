@@ -1,25 +1,21 @@
-import Router from "koa-router";
-import compose from "koa-compose";
-import helloRouter from "./hello.route";
+import express, { Request, Response, NextFunction, Router } from "express";
+import kubernetesRouter from "../routes/kubernetes.route";
 
 interface Route {
   prefix: string;
-  getRoutes: (router: Router) => void;
+  router: Router;
 }
 
-const routes: Route[] = [
-  { prefix: "/hello", getRoutes: helloRouter },
-  { prefix: "/hello", getRoutes: helloRouter },
-];
+const routes: Route[] = [{ prefix: "/kubernetes", router: kubernetesRouter }];
 
-const routers: Router[] = [];
-
-routes.map((r) => {
-  const apiRoutes2 = new Router({ prefix: r.prefix });
-  r.getRoutes(apiRoutes2);
-  routers.push(apiRoutes2);
+const apiRouter = express.Router();
+apiRouter.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404);
+  next();
 });
 
-const apiRoutes = compose(routers.map((router) => router.routes()));
+routes.map((route) => {
+  apiRouter.use(route.prefix, route.router);
+});
 
-export default apiRoutes;
+export default apiRouter;

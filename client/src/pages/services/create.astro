@@ -1,0 +1,9 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ServiceForm from "./components/serviceForm.svelte";
+---
+
+<Layout title="Edit Service" breadcrumb="/services/create">
+  <h1 class="text-xl">New Service</h1>
+  <ServiceForm client:only />
+</Layout>

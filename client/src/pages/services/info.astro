@@ -1,0 +1,22 @@
+---
+import CMD from '../../scripts/cmd';
+import Layout from '../../layouts/Layout.astro';
+import Kubernetes from '../../scripts/kubernetes/kubernetes';
+
+console.log('asdkjhfjksdhajsajsh');
+
+const kube = new Kubernetes((new CMD).run);
+
+const id = Astro.url.searchParams.get('id') || '';
+
+if(!id) Astro.redirect('/services')
+
+const resource = await kube.findOne(id);
+
+if(!resource) Astro.redirect('/services');
+
+---
+
+<Layout title="Service info", breadcrumb='/services/info' isIndex>
+    <h1>Editing {resource?.name}</h1>
+</Layout>

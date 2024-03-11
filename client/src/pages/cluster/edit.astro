@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+interface Props {
+    editMode?: boolean;
+}
+
+const { editMode=true } = Astro.props;
+---
+
+<Layout title=`${editMode ? 'Edit' : 'Create'} cluster` breadcrumb=`/cluster/${editMode ? 'edit' : 'create'}` >
+    <h1>Under construction</h1>
+</Layout>

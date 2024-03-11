@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: 'apacherr'
+    labels:
+        app: 'apacherr'
+spec:
+    type: 'ClusterIP'
+    selector:
+        app: 'apacherr'
+    ports:
+        - port: 899
+          targetPort: 89
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: 'apacherr'
+    labels:
+        app: 'apacherr'
+type: Opaque
+data:
+    WELCOME: V0VMQ09NRSE=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: 'apacherr'
+    labels:
+        app: 'apacherr'
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: 'apacherr'
+    template:
+        metadata:
+            labels:
+                app: 'apacherr'
+        spec:
+            restartPolicy: Always
+            containers:
+                - name: 'apacherr'
+                  image: 'httpd'
+                  envFrom:
+                    - secretRef:
+                            name: 'apacherr'
+                  resources:
+                      limits:
+                          memory: '128Mi'
+                          cpu: '250m'
+                  ports:
+                      - containerPort: 89

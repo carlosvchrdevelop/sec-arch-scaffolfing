@@ -1,0 +1,37 @@
+---
+import Nav from "../components/Nav.astro";
+import Toolbar from "../components/Toolbar.astro";
+import { styles } from "../data/styles";
+
+interface Props {
+  title: string;
+  breadcrumb: string;
+  isIndex?: boolean;
+}
+
+const { title, breadcrumb, isIndex = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Security architecture dashboard orquestator"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class=`w-screen flex flex-col items-center ${styles.pageBgColor}`>
+    <Nav {breadcrumb} />
+    <div class=`${styles.pageMaxWidth} w-full`>
+      <Toolbar {breadcrumb} {isIndex} />
+    </div>
+    <main class=`${styles.pageMaxWidth} mt-8 w-full`>
+      <slot />
+    </main>
+  </body>
+</html>
