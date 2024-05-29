@@ -6,9 +6,14 @@
   import StartIcon from "../../../icons/StartIcon.svelte";
   import StopIcon from "../../../icons/StopIcon.svelte";
 
+  let refreshing = false;
+
   const getResources = async () => {
+    if (refreshing) return;
+    refreshing = true;
     const res = await fetch("http://localhost:3000/kubernetes");
     const data = await res.json();
+    refreshing = false;
     return data?.data ?? [];
   };
 
@@ -30,18 +35,6 @@
       errors = err;
     }
   };
-
-  // let interval;
-  // $: {
-  //   clearInterval(interval);
-  //   interval = setInterval(async () => {
-  //     try {
-  //       resources = await getResources();
-  //     } catch (err) {
-  //       errors = err;
-  //     }
-  //   }, 500);
-  // }
 </script>
 
 {errors}
@@ -55,6 +48,13 @@
       Start by creating one...
     </p>
   {:else}
+    <div class="w-full flex justify-end px-4 py-2">
+      <button
+        class="text-blue-800 cursor-pointer"
+        on:click={() => (resources = getResources())}>Refresh</button
+      >
+    </div>
+
     <div class="overflow-auto w-full shadow">
       <table class="table-fixed min-w-full">
         <thead class="bg-blue-500 text-white">
@@ -73,7 +73,11 @@
           {#each resources as resource}
             <tr class="hover:bg-gray-100 tr-hoverable">
               <td class="px-6 py-4 text-center">
-                <a href="/" class="hover:underline text-blue-700">
+                <a
+                  href={`http://${resource.clusterIPs[0]}:${resource.externalPort}`}
+                  target="_blank"
+                  class="hover:underline text-blue-700"
+                >
                   {resource.name}
                 </a>
               </td>
@@ -81,43 +85,45 @@
               <td class="px-6 py-4 text-center">{resource.status}</td>
               <td class="px-6 py-4 text-center">{resource.replicas}</td>
               <td class="px-6 py-4 text-center">
-                {resource.externalPort}:{resource.internalPort}
+                {resource.internalPort}:{resource.externalPort}
               </td>
               <td class="px-6 py-4 text-center">{resource.ip}</td>
               <td class="px-6 py-4 text-center">
                 {resource.serviceType === "ClusterIP" ? "Private" : "Public"}
               </td>
-              <td class="px-6 py-4 flex items-center justify-center gap-2">
-                {#if resource.replicas !== 0}
-                  <button
-                    title="stop"
-                    class="w-5 cursor-pointer fill-orange-600 hover:fill-orange-800"
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-center gap-2">
+                  {#if resource.replicas !== 0}
+                    <button
+                      title="stop"
+                      class="w-5 cursor-pointer fill-orange-600 hover:fill-orange-800"
+                    >
+                      <StopIcon />
+                    </button>
+                  {:else}
+                    <button
+                      title="start"
+                      class="w-4 cursor-pointer fill-green-700 hover:fill-green-900"
+                    >
+                      <StartIcon />
+                    </button>
+                  {/if}
+                  <a
+                    href="/services/edit?name={resource.name}"
+                    title="edit"
+                    class="w-5 cursor-pointer fill-blue-700 hover:fill-blue-900"
                   >
-                    <StopIcon />
-                  </button>
-                {:else}
+                    <EditIcon />
+                  </a>
                   <button
-                    title="start"
-                    class="w-4 cursor-pointer fill-green-700 hover:fill-green-900"
+                    type="button"
+                    on:click={() => deleteResource(resource.name)}
+                    title="delete"
+                    class="w-4 cursor-pointer fill-red-700 hover:fill-red-900"
                   >
-                    <StartIcon />
+                    <DeleteIcon />
                   </button>
-                {/if}
-                <a
-                  href="/services/edit?name={resource.name}"
-                  title="edit"
-                  class="w-5 cursor-pointer fill-blue-700 hover:fill-blue-900"
-                >
-                  <EditIcon />
-                </a>
-                <button
-                  type="button"
-                  on:click={() => deleteResource(resource.name)}
-                  title="delete"
-                  class="w-4 cursor-pointer fill-red-700 hover:fill-red-900"
-                >
-                  <DeleteIcon />
-                </button>
+                </div>
               </td>
             </tr>
           {/each}

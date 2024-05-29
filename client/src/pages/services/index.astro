@@ -3,6 +3,6 @@ import Layout from "../../layouts/Layout.astro";
 import ServiceTableList from "./components/serviceTableList.svelte";
 ---
 
-<Layout title="Services" , breadcrumb="/services" isIndex>
+<Layout title="Services" breadcrumb="/services" isIndex>
   <ServiceTableList client:load />
 </Layout>

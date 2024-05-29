@@ -3,13 +3,15 @@
   import Alert from "../../../components/Alert.svelte";
   import { kubernetesEndpoint } from "../../../config/endpoints";
   import Loading from "../../../components/Loading.svelte";
-  const urlParams = new URLSearchParams(window.location.search);
   let editMode = false;
   let id = undefined;
 
-  if (urlParams.has("name")) {
-    editMode = true;
-    id = urlParams.get("name");
+  if (typeof window !== "undefined") {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("name")) {
+      editMode = true;
+      id = urlParams.get("name");
+    }
   }
 
   let name = "";
@@ -30,14 +32,14 @@
   };
 
   const populate = (resource) => {
-    name = resource.name;
-    image = resource.image;
-    internalPort = resource.internalport;
-    externalPort = resource.externalport;
-    replicas = resource.replicas;
-    serviceType = resource.serviceType;
-    maxCpu = resource.maxcpu;
-    maxMemory = resource.maxmemory;
+    name = resource?.name || "";
+    image = resource?.image || "";
+    internalPort = resource?.internalport || "";
+    externalPort = resource?.externalport || "";
+    replicas = resource?.replicas || 1;
+    serviceType = resource?.serviceType || "private";
+    maxCpu = resource?.maxcpu || 250;
+    maxMemory = resource?.maxmemory || 128;
   };
 
   let data = editMode ? getData() : null;
